@@ -1,0 +1,6 @@
+# Qt Creator project user files
+CMakeLists.txt.user
+CMakeLists.txt.user*
+
+# build dir
+build
