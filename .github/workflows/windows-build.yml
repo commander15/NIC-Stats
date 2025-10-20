@@ -1,0 +1,43 @@
+name: Build Windows Release
+
+on:
+  push:
+    branches: [ main ]  # Or your release branch
+  workflow_dispatch:  # Enables manual trigger from GitHub UI
+
+jobs:
+  build-windows:
+    runs-on: windows-latest  # Uses a Windows VM in the cloud
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.9.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'  # Or 'win64_msvc2019_64' for MSVC
+        modules: 'qtcharts qtmultimedia'  # Add any extra modules you need
+        install-deps: true  # Installs dependencies like MinGW or MSVC
+
+    - name: Build
+      run: |
+        mkdir build
+        cd build
+        mkdir release
+        cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../release
+        mingw32-make install
+
+    - name: Package Executable
+      run: |
+        # Zip the release folder
+        7z a NIC-Stats.zip build/release/*
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: NIC-Stats-Windows
+        path: NIC-Stats.zip
