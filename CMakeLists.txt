@@ -31,4 +31,9 @@ qt_add_executable(App main.cpp
     stats-wizard/statisticsprocessingpage.h stats-wizard/statisticsprocessingpage.cpp stats-wizard/statisticsprocessingpage.ui
 )
 
+set_target_properties(App
+    PROPERTIES
+        OUTPUT_NAME NIC-Stats
+)
+
 target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
