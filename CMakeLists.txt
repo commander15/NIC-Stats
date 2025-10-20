@@ -37,3 +37,22 @@ set_target_properties(App
 )
 
 target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
+
+# Installation
+
+if (LINUX)
+    set(RUNTIME_DEPLOY_CODE "file(COPY ${Qt6_DIR}/../../../plugins/platformthemes DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins)")
+elseif (WIN32)
+    set(RUNTIME_DEPLOY_CODE "")
+endif()
+
+install(TARGETS App RUNTIME DESTINATION bin)
+
+qt_generate_deploy_app_script(
+    TARGET App
+    OUTPUT_SCRIPT APP_DEPLOY_SCRIPT
+    NO_TRANSLATIONS
+)
+
+install(SCRIPT ${APP_DEPLOY_SCRIPT})
+install(CODE ${RUNTIME_DEPLOY_CODE})
