@@ -43,7 +43,7 @@ target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
 if (LINUX)
     set(RUNTIME_DEPLOY_CODE "file(COPY ${Qt6_DIR}/../../../plugins/platformthemes DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins)")
 elseif (WIN32)
-    set(RUNTIME_DEPLOY_CODE "")
+    set(RUNTIME_DEPLOY_CODE "file(COPY ${Qt6_DIR}/../../../plugins/platformthemes DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins)")
 endif()
 
 install(TARGETS App RUNTIME DESTINATION bin)
