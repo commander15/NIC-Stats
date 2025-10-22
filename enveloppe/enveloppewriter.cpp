@@ -26,20 +26,21 @@ void EnveloppeWriter::writeEnveloppe(const Enveloppe &enveloppe, const QString &
     document->renameSheet(document->currentSheet()->sheetName(), m_recapSheetName);
 
     // Identifying kit numbers
-    const QStringList kitNumbers = m_kitManager->kitsNumbers();
+    const QStringList kitNames = m_kitManager->kitsNames();
 
     // Generating recap sheet
     int row = 1;
-    for (const QString &kitNumber : kitNumbers) {
-        const Kit kit = m_kitManager->kitNumbered(kitNumber);
+    for (const QString &kitName : kitNames) {
+        const Kit kit = m_kitManager->kitNamed(kitName);
         row = writeTable(enveloppe, kit, document, row + 2, error);
     }
 
     // Generating kit based sheets
-    for (const QString &kitNumber : kitNumbers) {
-        const Kit kit = m_kitManager->kitNumbered(kitNumber);
+    for (const QString &kitName : kitNames) {
+        const Kit kit = m_kitManager->kitNamed(kitName);
+        const QString kitNumber = kit.number();
 
-        const QString sheetName = kitNumber + " - " + kit.name();
+        const QString sheetName = (kitNumber.isEmpty() ? "" : kitNumber + " - ") + kitName;
         if (!document->addSheet(sheetName)) {
             if (error != nullptr) {
                 *error = Error(1, "Can't create sheet for kit number " + kitNumber);

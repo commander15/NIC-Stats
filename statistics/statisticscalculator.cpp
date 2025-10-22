@@ -16,13 +16,30 @@ Statistics StatisticsCalculator::compute(const Package &package) const
 {
     Statistics statistics;
 
-    const QStringList kitsNumbers = m_kitManager->kitsNumbers();
-    for (const QString &kitNumber : kitsNumbers) {
-        const Kit kit = m_kitManager->kitNumbered(kitNumber);
+    const QStringList kitsNames = m_kitManager->kitsNames();
+    for (const QString &kitName : kitsNames) {
+        const Kit kit = m_kitManager->kitNamed(kitName);
         statistics.postsStatistics.append(computePostStatistics(kit.name(), kit.regularExpression(), package));
     }
 
+    auto ns = findAllKitsNumbers(package);
+    ns.sort();
+
+    int total = statistics.total();
     return statistics;
+}
+
+QStringList StatisticsCalculator::findAllKitsNumbers(const Package &package) const
+{
+    QStringList numbers;
+
+    const QList<Enveloppe> enveloppes = package.enveloppes();
+    for (const Enveloppe &enveloppe : enveloppes) {
+        numbers.append(enveloppe.recordsKitsNumbers());
+        numbers.removeDuplicates();
+    }
+
+    return numbers;
 }
 
 PostStats StatisticsCalculator::computePostStatistics(const QString &name, const QRegularExpression &kit, const Package &package) const

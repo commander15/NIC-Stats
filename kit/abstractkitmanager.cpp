@@ -6,8 +6,11 @@ AbstractKitManager::~AbstractKitManager()
 
 bool AbstractKitManager::hasKitNumbered(const QString &number) const
 {
+    if (number.isEmpty()) return false;
+
     auto it = std::find_if(m_kits.begin(), m_kits.end(), [&number](const Kit &kit) {
-        return kit.number() == number;
+        const QString currentNumber = kit.number();
+        return (currentNumber.isEmpty() ? false : currentNumber == number);
     });
 
     return it != m_kits.end();
@@ -15,8 +18,11 @@ bool AbstractKitManager::hasKitNumbered(const QString &number) const
 
 Kit AbstractKitManager::kitNumbered(const QString &number) const
 {
+    if (number.isEmpty()) return Kit();
+
     auto it = std::find_if(m_kits.begin(), m_kits.end(), [&number](const Kit &kit) {
-        return kit.number() == number;
+        const QString currentNumber = kit.number();
+        return (currentNumber.isEmpty() ? false : currentNumber == number);
     });
 
     return (it == m_kits.end() ? Kit() : *it);
@@ -40,6 +46,23 @@ Kit AbstractKitManager::kitNamed(const QString &name) const
     return (it == m_kits.end() ? Kit() : *it);
 }
 
+Kit AbstractKitManager::officeKit() const
+{
+    if (!m_officeKitExpr.isValid()) return Kit();
+
+    KitsQuery query;
+    query.number = m_officeKitExpr;
+
+    const QList<Kit> kits = findKits(query);
+    return (kits.isEmpty() ? Kit() : kits.first());
+}
+
+void AbstractKitManager::setOfficeKit(const Kit &kit)
+{
+    addKit(kit);
+    m_officeKitExpr = kit.regularExpression();
+}
+
 QList<Kit> AbstractKitManager::findKits(const KitsQuery &query) const
 {
     QList<Kit> kits = m_kits;
@@ -54,7 +77,7 @@ QList<Kit> AbstractKitManager::findKits(const KitsQuery &query) const
         }
 
         if (query.number.isValid()) {
-            if (!query.number.matchView(kit.number()).hasMatch())
+            if (query.number != kit.regularExpression() && !query.number.matchView(kit.number()).hasMatch())
                 return true;
         }
 

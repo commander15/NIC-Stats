@@ -38,8 +38,9 @@ public:
     StatisticsCalculator(AbstractKitManager *kitManager);
 
     Statistics compute(const Package &package) const;
-
     PostStats computePostStatistics(const QString &name, const QRegularExpression &kit, const Package &package) const;
+
+    QStringList findAllKitsNumbers(const Package &package) const;
 
 private:
     AbstractKitManager *m_kitManager;

@@ -25,6 +25,9 @@ public:
     QList<Record> kitRecords(const QString &kit) const;
     QList<Record> kitRecords(const QRegularExpression &kit) const;
     QStringList recordsKits(const QRegularExpression &officeKit) const;
+
+    QStringList recordsKitsNumbers() const;
+    QList<Record> records() const;
     void addRecord(const Record &record, const QString &kit);
 
 private:

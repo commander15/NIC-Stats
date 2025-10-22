@@ -95,6 +95,18 @@ QStringList Enveloppe::recordsKits(const QRegularExpression &officeKit) const
     return kits;
 }
 
+QStringList Enveloppe::recordsKitsNumbers() const
+{
+    QStringList numbers = data->records.keys();
+    numbers.removeDuplicates();
+    return numbers;
+}
+
+QList<Record> Enveloppe::records() const
+{
+    return data->records.values();
+}
+
 void Enveloppe::addRecord(const Record &record, const QString &kit)
 {
     data->records.insert(kit, record);

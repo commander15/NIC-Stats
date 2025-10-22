@@ -23,6 +23,9 @@ public:
     bool hasKitNamed(const QString &name) const;
     Kit kitNamed(const QString &name) const;
 
+    Kit officeKit() const;
+    void setOfficeKit(const Kit &kit);
+
     QList<Kit> findKits(const KitsQuery &query) const;
 
     QStringList kitsNames() const;
@@ -40,6 +43,7 @@ protected:
     virtual bool canRemoveKit(const Kit &kit) const = 0;
 
 private:
+    QRegularExpression m_officeKitExpr;
     QList<Kit> m_kits;
 };
 
