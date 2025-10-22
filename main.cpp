@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
 
     // We hard code kits for now
     KitManager kitManager;
-    kitManager.addKit(Kit(QRegularExpression(R"(^03.+$)"), "EN01BIS", Kit::DesktopKit));
+    kitManager.setOfficeKit(Kit(QRegularExpression(R"(^03.+$)"), "EN01BIS", Kit::DesktopKit));
+    //kitManager.addKit(Kit(QRegularExpression(R"(^0058|0060$)"), "EN01", Kit::DesktopKit));
     kitManager.addKit(Kit("0439", "MEME", Kit::MobileKit));
     kitManager.addKit(Kit("0515", "BLANGOUA", Kit::MobileKit));
     kitManager.addKit(Kit("0506", "MAROUA KIT MOBILE", Kit::MobileKit));
@@ -28,6 +29,10 @@ int main(int argc, char *argv[])
     kitManager.addKit(Kit("0511", "MOKOLO", Kit::MobileKit));
     kitManager.addKit(Kit("0424", "YAGOUA", Kit::MobileKit));
     kitManager.addKit(Kit("0440", "KAELE", Kit::MobileKit));
+    kitManager.addKit(Kit("0517", "DARAK", Kit::MobileKit));
+    kitManager.addKit(Kit("0441", "MORA", Kit::MobileKit));
+
+    //return test(&kitManager);
 
     StatisticsComputingWizard wizard;
     wizard.setKitManager(&kitManager);
