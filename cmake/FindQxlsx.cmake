@@ -10,4 +10,6 @@ FetchContent_MakeAvailable(QXlsx)
 
 FetchContent_GetProperties(QXlsx SOURCE_DIR QXLSX_SOURCE_DIR)
 
-add_subdirectory(${QXLSX_SOURCE_DIR}/QXlsx)
+if (NOT TARGET QXlsx)
+    add_subdirectory(${QXLSX_SOURCE_DIR}/QXlsx)
+endif()
