@@ -23,23 +23,20 @@ jobs:
         modules: 'qtcharts'  # Add any extra modules you need
         install-deps: true  # Installs dependencies like MinGW or MSVC
 
-    - name: Install Build tools
+    - name: Install Build Tools
+      if: false
       shell: cmd
       run: choco install -y cmake ninja
 
     - name: Check Tools
       shell: cmd
       run: |
-        cmake --version
-        ninja --version
-        gcc --version
-        g++ --version
-        echo "PATH "
-        echo %PATH%
-        echo "MinGW location"
-        dir "%QT_ROOT_DIR%/tools"
+        echo "QT ROOT "
+        echo %QT_ROOT_DIR%
+        dir "%QT_ROOT_DIR%"
 
     - name: Build
+      if: false
       shell: cmd
       run: |
         mkdir release
@@ -49,6 +46,7 @@ jobs:
         cmake --build . --target all install
 
     - name: Package Executable
+      if: false
       shell: cmd
       run: |
         # Zip the release folder
