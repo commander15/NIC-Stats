@@ -20,14 +20,15 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'  # Or 'win64_msvc2019_64' for MSVC
-        modules: 'qtcharts qtmultimedia'  # Add any extra modules you need
+        modules: 'qtcharts'  # Add any extra modules you need
         install-deps: true  # Installs dependencies like MinGW or MSVC
 
     - name: Install Build tools
-      run: |
-        choco install -y cmake ninja
+      shell: cmd
+      run: choco install -y cmake ninja
 
     - name: Check Tools
+      shell: cmd
       run: |
         cmake --version
         ninja --version
@@ -35,16 +36,20 @@ jobs:
         g++ --version
         echo "PATH "
         echo %PATH%
+        echo "MinGW location"
+        dir "%QT_ROOT_DIR%/tools"
 
     - name: Build
+      shell: cmd
       run: |
         mkdir release
         mkdir build
         cd build
-        cmake -S .. -B . -G "Ninja" -DCMAKE_C_COMPILER="C:/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="C:/mingw64/bin/g++.exe" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="{{github.workspace}}/release"
+        cmake -S .. -B . -G "Ninja" -DCMAKE_C_COMPILER="gcc.exe" -DCMAKE_CXX_COMPILER="g++.exe" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="{{github.workspace}}/release"
         cmake --build . --target all install
 
     - name: Package Executable
+      shell: cmd
       run: |
         # Zip the release folder
         7z a NIC-Stats.zip build/release/*
