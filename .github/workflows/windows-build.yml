@@ -32,7 +32,7 @@ jobs:
         mkdir release
         mkdir build
         cd build
-        cmake -S .. -B . -G "Ninja" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="{{github.workspace}}/release"
+        cmake -S .. -B . -G "Ninja" -DCMAKE_C_COMPILER="C:/mingw64/bin/gcc.exe" -DCMAKE_CXX_COMPILER="C:/mingw64/bin/g++.exe" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_INSTALL_PREFIX="{{github.workspace}}/release"
         cmake --build . --target all install
 
     - name: Package Executable
