@@ -27,6 +27,15 @@ jobs:
       run: |
         choco install -y cmake ninja
 
+    - name: Check Tools
+      run: |
+        cmake --version
+        ninja --version
+        gcc --version
+        g++ --version
+        echo "PATH "
+        echo %PATH%
+
     - name: Build
       run: |
         mkdir release
