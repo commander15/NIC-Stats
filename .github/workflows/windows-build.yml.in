@@ -39,7 +39,7 @@ jobs:
       run: cmake -S ${{github.WORKSPACE}} -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
-      run: cmake --build . --target all package
+      run: cmake --build ${{env.BUILD_DIR}} --target all package
 
     - name: Release
       # if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
