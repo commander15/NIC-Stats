@@ -36,7 +36,7 @@ jobs:
         arch: x64
 
     - name: Configure CMake
-      run: cmake -S ${{github.WORKSPACE} -B ${{env.BUILD_DIR}}} -G Ninja -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S ${{github.WORKSPACE}} -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
       run: cmake --build . --target all package
