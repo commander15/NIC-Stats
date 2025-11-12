@@ -7,8 +7,8 @@ on:
 
 env:
   PACKAGE_NAME: NIC-Stats
-  PACKAGE_VERSION: 1.0
-  BUILD_DIR: ${{github.WORKSPACE}}/build
+  PACKAGE_VERSION: 1.1
+  BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
   build-windows:
@@ -34,7 +34,7 @@ jobs:
         arch: x64
 
     - name: Configure CMake
-      run: cmake -S ${{github.WORKSPACE}} -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release
+      run: cmake -S ${{github.workspace}} -B ${{env.BUILD_DIR}} -G Ninja -DCMAKE_BUILD_TYPE=Release
 
     - name: Build
       run: cmake --build ${{env.BUILD_DIR}} --target all package
@@ -44,8 +44,22 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         name: NIC Stats ${{env.PACKAGE_VERSION}} released 🎉
-        body_path: ${{github.WORKSPACE}}/notes/RELEASE-${{env.PACKAGE_VERSION}}.txt
+        body_path: ${{github.workspace}}/notes/RELEASE-${{env.PACKAGE_VERSION}}.txt
         tag_name: v${{env.PACKAGE_VERSION}}
         files: |
           ${{env.BUILD_DIR}}/*.zip
         make_latest: true
+
+    - name: Send Mails
+      uses: dawidd6/action-send-mail@v3
+      continue-on-error: true
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{secrets.MAIL_ADDRESS}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: NIC Stats ${{env.PACKAGE_VERSION}} released !
+        to: amadoubenjamain@gmail.com,assakayecelestin@gmail.com
+        from: Amadou Benjamain
+        body: "Hello, a new version of NIC Stats has just been released, download and try !"
+        attachments: ${{env.BUILD_DIR}}/*.zip
