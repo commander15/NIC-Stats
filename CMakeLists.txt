@@ -45,12 +45,6 @@ target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
 
 # Installation
 
-if (LINUX)
-    set(RUNTIME_DEPLOY_CODE "file(COPY ${Qt6_DIR}/../../../plugins/platformthemes DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins)")
-elseif (WIN32)
-    set(RUNTIME_DEPLOY_CODE "file(COPY ${Qt6_DIR}/../../../plugins/platformthemes DESTINATION ${CMAKE_INSTALL_PREFIX}/plugins)")
-endif()
-
 install(TARGETS App RUNTIME DESTINATION bin)
 
 qt_generate_deploy_app_script(
@@ -60,4 +54,11 @@ qt_generate_deploy_app_script(
 )
 
 install(SCRIPT ${APP_DEPLOY_SCRIPT})
-install(CODE ${RUNTIME_DEPLOY_CODE})
+
+# Package
+set(CPACK_PACKAGE_NAME   "NIC-Stats")
+set(CPACK_PACKAGE_VENDOR "Commander Systems")
+set(CPACK_GENERATOR      ZIP)
+include(CPack)
+
+configure_file(.github/workflows/windows-build.yml.in ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/windows-build.yml @ONLY)

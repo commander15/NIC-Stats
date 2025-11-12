@@ -7,7 +7,7 @@ on:
 
   env:
     PACKAGE_NAME: NIC-Stats
-    PACKAGE_VERSION: 
+    PACKAGE_VERSION: @PROJECT_VERSION_VERSION@
     BUILD_DIR: ${{github.WORKSPACE}}/build
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.9.0'
+        version: '@Qt6Core_VERSION@'
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'
