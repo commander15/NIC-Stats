@@ -17,6 +17,13 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName("NIC Stats");
     app.setStyle("fusion");
 
+    if (QDate::currentDate() > QDate(2025, 12, 1) || true) {
+        QString msg = "App requires an update, if you don't understand what is happening, please, reach out using one of the following ways:\n\n";
+        msg.append("<b>Amadou Benjamain</b>\n+237 691 272 717 (Whatsapp + Mobile)\namadoubenjamain@gmail.com\n\n");
+        msg.append("Thanks for using NIC Stats 😊");
+        return 0;
+    }
+
     QSettings settings;
     settings.sync();
 

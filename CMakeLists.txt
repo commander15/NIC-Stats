@@ -24,7 +24,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 # Looking for Qxlsx
 include(cmake/FindQxlsx.cmake)
 
-qt_add_executable(App main.cpp
+qt_add_executable(App WIN32
+    main.cpp
     common/error.cpp common/error.h common/reader.cpp common/reader.h common/writer.cpp common/writer.h
     enveloppe/enveloppe.cpp enveloppe/enveloppe.h enveloppe/enveloppereader.cpp enveloppe/enveloppereader.h enveloppe/record.cpp enveloppe/record.h
     enveloppe/enveloppewriter.h enveloppe/enveloppewriter.cpp
