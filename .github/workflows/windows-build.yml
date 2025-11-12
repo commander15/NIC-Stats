@@ -61,5 +61,4 @@ jobs:
         subject: NIC Stats ${{env.PACKAGE_VERSION}} released !
         to: amadoubenjamain@gmail.com,assakayecelestin@gmail.com
         from: Amadou Benjamain
-        body: "Hello, a new version of NIC Stats has just been released, download and try !"
-        attachments: ${{env.BUILD_DIR}}/*.zip
+        body: "Hello, a new version of NIC Stats has just been released, download and try: https://github.com/commander15/NIC-Stats/releases/latest"
