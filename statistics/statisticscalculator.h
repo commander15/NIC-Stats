@@ -4,6 +4,7 @@
 #include <package/package.h>
 
 #include <QMap>
+#include <QDate>
 
 class AbstractKitManager;
 
@@ -21,6 +22,7 @@ struct PostStats {
 };
 
 struct Statistics {
+    QDate date;
     QList<PostStats> postsStatistics;
 
     int total() const
@@ -35,9 +37,17 @@ struct Statistics {
 class StatisticsCalculator
 {
 public:
+    enum CalculationOption {
+        NoOptions = 0x0,
+        IncludeUnknownKits = 0x1,
+        ExcludeKownKits = 0x2
+    };
+
+    Q_DECLARE_FLAGS(CalculationOptions, CalculationOption)
+
     StatisticsCalculator(AbstractKitManager *kitManager);
 
-    Statistics compute(const Package &package) const;
+    Statistics compute(const Package &package, const CalculationOptions &options) const;
     PostStats computePostStatistics(const QString &name, const QRegularExpression &kit, const Package &package) const;
 
     QStringList findAllKitsNumbers(const Package &package) const;
@@ -45,5 +55,7 @@ public:
 private:
     AbstractKitManager *m_kitManager;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(StatisticsCalculator::CalculationOptions)
 
 #endif // STATISTICSCALCULATOR_H

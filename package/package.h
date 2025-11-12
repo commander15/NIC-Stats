@@ -5,6 +5,8 @@
 
 class Enveloppe;
 
+class QDate;
+
 class PackageData;
 class Package
 {
@@ -15,6 +17,9 @@ public:
     Package &operator=(const Package &);
     Package &operator=(Package &&);
     ~Package();
+
+    QDate date() const;
+    void setDate(const QDate &date);
 
     QStringList enveloppesNumbers() const;
     QList<Enveloppe> enveloppes() const;

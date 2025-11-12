@@ -12,20 +12,40 @@ StatisticsCalculator::StatisticsCalculator(AbstractKitManager *kitManager)
 {
 }
 
-Statistics StatisticsCalculator::compute(const Package &package) const
+Statistics StatisticsCalculator::compute(const Package &package, const CalculationOptions &options) const
 {
     Statistics statistics;
 
-    const QStringList kitsNames = m_kitManager->kitsNames();
-    for (const QString &kitName : kitsNames) {
-        const Kit kit = m_kitManager->kitNamed(kitName);
-        statistics.postsStatistics.append(computePostStatistics(kit.name(), kit.regularExpression(), package));
+    // Date
+    statistics.date = package.date();
+
+    // kit numbers extraction
+    QStringList kitNumbers;
+    if (options.testFlag(IncludeUnknownKits)) {
+        kitNumbers = findAllKitsNumbers(package);
+        kitNumbers.removeIf([this](const QString &number) {
+            const bool found = m_kitManager->hasKitNumbered(number);
+            return found;
+        });
+        kitNumbers.sort();
     }
 
-    auto ns = findAllKitsNumbers(package);
-    ns.sort();
+    // Computing agains known kits
+    if (!options.testFlag(ExcludeKownKits)) {
+        const QStringList kitsNames = m_kitManager->kitsNames();
+        for (const QString &kitName : kitsNames) {
+            const Kit kit = m_kitManager->kitNamed(kitName);
+            statistics.postsStatistics.append(computePostStatistics(kit.name(), kit.regularExpression(), package));
+            kitNumbers.removeOne(kit.number());
+        }
+    }
 
-    int total = statistics.total();
+    // Computing against unknown kits
+    for (const QString &kitNumber : std::as_const(kitNumbers)) {
+        const QRegularExpression expr('^' + kitNumber + '$');
+        statistics.postsStatistics.append(computePostStatistics(kitNumber, expr, package));
+    }
+
     return statistics;
 }
 

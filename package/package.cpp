@@ -5,10 +5,12 @@
 #include <xlsxworkbook.h>
 
 #include <QList>
+#include <QDate>
 
 class PackageData : public QSharedData
 {
 public:
+    QDate date;
     QList<Enveloppe> enveloppes;
 };
 
@@ -43,6 +45,16 @@ Package::~Package()
 {
 }
 
+QDate Package::date() const
+{
+    return data->date;
+}
+
+void Package::setDate(const QDate &date)
+{
+    data->date = date;
+}
+
 QStringList Package::enveloppesNumbers() const
 {
     QStringList numbers;
@@ -62,5 +74,12 @@ QList<Enveloppe> Package::enveloppes() const
 
 void Package::addEnveloppe(const Enveloppe &enveloppe)
 {
-    data->enveloppes.append(enveloppe);
+    auto it = std::find_if(data->enveloppes.begin(), data->enveloppes.end(), [enveloppe](const Enveloppe &existing) {
+        return enveloppe.number() == existing.number();
+    });
+
+    if (it == data->enveloppes.end())
+        data->enveloppes.append(enveloppe);
+    else
+        data->enveloppes.replace(std::distance(data->enveloppes.begin(), it), enveloppe);
 }

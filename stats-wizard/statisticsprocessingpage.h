@@ -24,7 +24,7 @@ public:
     void cleanupPage() override;
     bool isComplete() const override;
 
-    void process(const QString &outputDir, const QStringList &files, class AbstractKitManager *kitManager);
+    void process(const QDate &date, const QString &outputDir, const QStringList &files, class AbstractKitManager *kitManager);
 
 private:
     static Package readPackage(const QStringList &files);

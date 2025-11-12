@@ -6,14 +6,8 @@ AbstractKitManager::~AbstractKitManager()
 
 bool AbstractKitManager::hasKitNumbered(const QString &number) const
 {
-    if (number.isEmpty()) return false;
-
-    auto it = std::find_if(m_kits.begin(), m_kits.end(), [&number](const Kit &kit) {
-        const QString currentNumber = kit.number();
-        return (currentNumber.isEmpty() ? false : currentNumber == number);
-    });
-
-    return it != m_kits.end();
+    const Kit kit = kitNumbered(number);
+    return kit.isValid();
 }
 
 Kit AbstractKitManager::kitNumbered(const QString &number) const
@@ -21,8 +15,8 @@ Kit AbstractKitManager::kitNumbered(const QString &number) const
     if (number.isEmpty()) return Kit();
 
     auto it = std::find_if(m_kits.begin(), m_kits.end(), [&number](const Kit &kit) {
-        const QString currentNumber = kit.number();
-        return (currentNumber.isEmpty() ? false : currentNumber == number);
+        const QRegularExpression expr = kit.regularExpression();
+        return expr.match(number).hasMatch();
     });
 
     return (it == m_kits.end() ? Kit() : *it);
@@ -30,11 +24,8 @@ Kit AbstractKitManager::kitNumbered(const QString &number) const
 
 bool AbstractKitManager::hasKitNamed(const QString &name) const
 {
-    auto it = std::find_if(m_kits.begin(), m_kits.end(), [&name](const Kit &kit) {
-        return kit.name() == name;
-    });
-
-    return it != m_kits.end();
+    const Kit kit = kitNamed(name);
+    return kit.isValid();
 }
 
 Kit AbstractKitManager::kitNamed(const QString &name) const

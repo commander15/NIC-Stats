@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/STATISTIQUES.xlsx</file>
+    </qresource>
+</RCC>

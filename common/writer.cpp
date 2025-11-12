@@ -48,8 +48,14 @@ QXlsx::Document *Writer::openFile(const QString &fileName, QIODeviceBase::OpenMo
 
 void Writer::closeFile(QXlsx::Document *document, bool autoSave)
 {
-    if (autoSave && document->property("write").toBool())
-        document->save();
+    if (autoSave && document->property("write").toBool()) {
+        const QString fileName = document->property("fileName").toString();
+        if (fileName.isEmpty())
+            document->save();
+        else
+            document->saveAs(fileName);
+    }
+
     delete document;
 }
 

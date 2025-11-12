@@ -10,6 +10,10 @@ StatisticsSetupPage::StatisticsSetupPage(QWidget *parent)
 {
     ui->setupUi(this);
 
+    const QDate today = QDate::currentDate();
+    ui->dateEdit->setDateRange(today.addDays(-14), today);
+    ui->dateEdit->setDate(today);
+
     ui->listView->setModel(&model);
 
     connect(ui->addFileButton, &QAbstractButton::clicked, this, &StatisticsSetupPage::addFile);
@@ -32,6 +36,11 @@ StatisticsSetupPage::StatisticsSetupPage(QWidget *parent)
 StatisticsSetupPage::~StatisticsSetupPage()
 {
     delete ui;
+}
+
+QDate StatisticsSetupPage::date() const
+{
+    return ui->dateEdit->date();
 }
 
 QStringList StatisticsSetupPage::files() const
@@ -77,7 +86,8 @@ void StatisticsSetupPage::removeFile()
 
 void StatisticsSetupPage::changeOutputDir()
 {
-    const QString dir = QFileDialog::getExistingDirectory(this, tr("Select directory"));
+    const QString currentDir = QDir::fromNativeSeparators(ui->outputDirOutput->text());
+    const QString dir = QFileDialog::getExistingDirectory(this, tr("Select directory"), currentDir);
     if (dir.isEmpty()) return;
 
     ui->outputDirOutput->setText(QDir::toNativeSeparators(dir));

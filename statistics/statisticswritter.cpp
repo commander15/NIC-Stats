@@ -4,6 +4,7 @@
 #include <enveloppe/record.h>
 
 #include <QRegularExpression>
+#include <QFile>
 
 #include <xlsxdocument.h>
 #include <xlsxcellformula.h>
@@ -25,32 +26,47 @@ void StatisticsWritter::writeStatistics(const Package &package, const QString &f
     // We can't compute without a calculator
     if (m_calculator == nullptr) return;
 
-    const Statistics computed = m_calculator->compute(package);
+    const Statistics computed = m_calculator->compute(package, m_options);
     writeStatistics(computed, fileName, error);
 }
 
 void StatisticsWritter::writeStatistics(const Statistics &statistics, const QString &fileName, Error *error)
 {
-    QXlsx::Document *document = openFile(fileName, QIODevice::WriteOnly, error);
+    // Removing old file (if exists)
+    if (QFile::exists(fileName))
+        QFile::remove(fileName);
+    QFile::copy(":/resources/STATISTIQUES.xlsx", fileName);
+
+    // Fixing permission issues
+    QFile::Permissions readPermissions = QFile::ReadUser | QFile::ReadGroup | QFile::ReadOther;
+    QFile::Permissions writePermissions = QFile::WriteUser | QFile::WriteGroup | QFile::WriteOther;
+    QFile::setPermissions(fileName, readPermissions | writePermissions);
+
+    QXlsx::Document *document = openFile(fileName, QIODevice::ReadWrite, error);
     if (document == nullptr) return;
 
-    // Clearing
-    deleteAllSheets(document);
+    const QDate date = statistics.date.isValid() ? statistics.date : QDate::currentDate();
+    const QString dateString = date.toString("d MMM yyyy");
 
-    // Renaming sheet
-    document->renameSheet(document->currentSheet()->sheetName(), "Statistiques");
+    // Cleaning
+    // deleteAllSheets(document);
 
-    // Writing headers
-    writeTableHeader(statistics, document);
+    // Building recap
+    document->renameSheet(document->currentSheet()->sheetName(), "Récapitulatif " + dateString);
+    writeTableHeader(statistics, document, true);
+    writeTableContent(statistics, document, true);
 
-    // Writing content
-    writeTableContent(statistics, document);
+    // Creating a sheet for details
+    document->selectSheet("Détails");
+    document->renameSheet("Détails", "Détails " + dateString);
+    writeTableHeader(statistics, document, false);
+    writeTableContent(statistics, document, false);
 
     // Saving
     closeFile(document);
 }
 
-int StatisticsWritter::writeTableHeader(const Statistics &statistics, QXlsx::Document *document, int row)
+int StatisticsWritter::writeTableHeader(const Statistics &statistics, QXlsx::Document *document, bool recap, int row)
 {
     QXlsx::Format format;
     format.setFontSize(14);
@@ -63,16 +79,19 @@ int StatisticsWritter::writeTableHeader(const Statistics &statistics, QXlsx::Doc
         return row;
 
     int i = 2;
-    const PostStats stats = statistics.postsStatistics.constFirst();
-    const QStringList enveloppes = stats.statistics.keys();
-    for (const QString &enveloppe : enveloppes) {
-        // Writing enveloppe number
-        document->write(row, i, enveloppe, format);
 
-        // Resizing column
-        document->setColumnWidth(i, 20);
+    if (!recap) {
+        const PostStats stats = statistics.postsStatistics.constFirst();
+        const QStringList enveloppes = stats.statistics.keys();
+        for (const QString &enveloppe : enveloppes) {
+            // Writing enveloppe number
+            document->write(row, i, enveloppe, format);
 
-        ++i;
+            // Resizing column
+            document->setColumnWidth(i, 20);
+
+            ++i;
+        }
     }
 
     document->write(row, i, "TOTAL", format);
@@ -81,7 +100,7 @@ int StatisticsWritter::writeTableHeader(const Statistics &statistics, QXlsx::Doc
     return row;
 }
 
-int StatisticsWritter::writeTableContent(const Statistics &statistics, QXlsx::Document *document, int startRow)
+int StatisticsWritter::writeTableContent(const Statistics &statistics, QXlsx::Document *document, bool recap, int startRow)
 {
     int row = startRow;
     int column = 1;
@@ -99,18 +118,22 @@ int StatisticsWritter::writeTableContent(const Statistics &statistics, QXlsx::Do
         // Adding post name
         document->write(row, 1, stats.postName, postFormat);
 
-        // Adding count per enveloppe
-        const QStringList enveloppes = stats.statistics.keys();
-        for (int i(0); i < enveloppes.size(); ++i)
-            document->write(row, i + 2, stats.statistics.value(enveloppes.at(i)));
+        if (recap) {
+            document->write(row, 2, stats.total());
+        } else {
+            // Adding count per enveloppe
+            const QStringList enveloppes = stats.statistics.keys();
+            for (int i(0); i < enveloppes.size(); ++i)
+                document->write(row, i + 2, stats.statistics.value(enveloppes.at(i)));
 
-        // Fill enveloppes for total computations
-        if (allEnveloppes.isEmpty())
-            allEnveloppes = enveloppes;
+            // Fill enveloppes for total computations
+            if (!recap && allEnveloppes.isEmpty())
+                allEnveloppes = enveloppes;
 
-        // Adding total cell
-        const QXlsx::CellRange range(row, 2, row, 1 + enveloppes.size());
-        document->write(row, enveloppes.size() + 2, "=SUM(" + range.toString() + ')');
+            // Adding total cell
+            const QXlsx::CellRange range(row, 2, row, 1 + enveloppes.size());
+            document->write(row, enveloppes.size() + 2, "=SUM(" + range.toString() + ')');
+        }
 
         // Going to next row
         ++row;
@@ -119,10 +142,14 @@ int StatisticsWritter::writeTableContent(const Statistics &statistics, QXlsx::Do
     // Adding total row
     const int postsCount = statistics.postsStatistics.size();
     document->write(row, 1, "TOTAL", postFormat);
-    for (int i(0); i <= allEnveloppes.count(); ++i) {
-        const int column = i + 2;
-        const QXlsx::CellRange range(2, i + 2, 1 + postsCount, i + 2);
-        document->write(row, column, "=SUM(" + range.toString() + ')');
+    if (recap) {
+        document->write(row, 2, statistics.total());
+    } else {
+        for (int i(0); i <= allEnveloppes.count(); ++i) {
+            const int column = i + 2;
+            const QXlsx::CellRange range(2, i + 2, 1 + postsCount, i + 2);
+            document->write(row, column, "=SUM(" + range.toString() + ')');
+        }
     }
 
     return row;

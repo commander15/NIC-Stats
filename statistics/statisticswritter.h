@@ -18,10 +18,11 @@ public:
     void writeStatistics(const Package &package, const QString &fileName, Error *error = nullptr);
     void writeStatistics(const Statistics &stats, const QString &fileName, Error *error = nullptr);
 
-    int writeTableHeader(const Statistics &statistics, QXlsx::Document *document, int row = 1);
-    int writeTableContent(const Statistics &statistics, QXlsx::Document *document, int startRow = 2);
+    int writeTableHeader(const Statistics &statistics, QXlsx::Document *document, bool recap = false, int row = 1);
+    int writeTableContent(const Statistics &statistics, QXlsx::Document *document, bool recap = false, int startRow = 2);
 
 private:
+    StatisticsCalculator::CalculationOptions m_options;
     StatisticsCalculator *m_calculator;
 };
 

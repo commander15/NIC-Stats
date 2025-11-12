@@ -106,7 +106,7 @@ QString Record::name() const
 
 void Record::setName(const QString &name)
 {
-    data->name = name;
+    data->name = name.trimmed();
 }
 
 QString Record::firstName() const
@@ -116,5 +116,5 @@ QString Record::firstName() const
 
 void Record::setFirstName(const QString &firstName)
 {
-    data->firstName = firstName;
+    data->firstName = firstName.trimmed();
 }

@@ -16,6 +16,8 @@ public:
     explicit StatisticsSetupPage(QWidget *parent = nullptr);
     ~StatisticsSetupPage();
 
+    QDate date() const;
+
     QStringList files() const;
 
     QString outputDir() const;

@@ -32,6 +32,8 @@ qt_add_executable(App main.cpp
     statistics/statisticswritter.cpp statistics/statisticswritter.h
     stats-wizard/statisticssetuppage.h stats-wizard/statisticssetuppage.cpp stats-wizard/statisticssetuppage.ui
     stats-wizard/statisticsprocessingpage.h stats-wizard/statisticsprocessingpage.cpp stats-wizard/statisticsprocessingpage.ui
+    resources.qrc
+    test.h test.cpp
 )
 
 set_target_properties(App

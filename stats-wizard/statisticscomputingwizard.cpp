@@ -35,7 +35,7 @@ void StatisticsComputingWizard::initializePage(int id)
 {
     if (id == ProcessingPage) {
         auto setup = ui->setupPage;
-        ui->processingPage->process(setup->outputDir(), setup->files(), m_kitManager);
+        ui->processingPage->process(setup->date(), setup->outputDir(), setup->files(), m_kitManager);
     }
 
     if (id == CompletedPage) {
