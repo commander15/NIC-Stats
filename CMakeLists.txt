@@ -6,8 +6,8 @@ project(NIC-Stats
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# Enabling C++ 17 support
-set(CMAKE_CXX_STANDARD 17)
+# Enabling C++ 20 support
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(MSVC)
