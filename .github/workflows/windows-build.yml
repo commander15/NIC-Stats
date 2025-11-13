@@ -43,7 +43,7 @@ jobs:
       # if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
       uses: softprops/action-gh-release@v2
       with:
-        name: NIC Stats ${{env.PACKAGE_VERSION}} released 🎉
+        name: NIC Stats ${{env.PACKAGE_VERSION}}
         body_path: ${{github.workspace}}/notes/RELEASE-${{env.PACKAGE_VERSION}}.txt
         tag_name: v${{env.PACKAGE_VERSION}}
         files: |
@@ -59,6 +59,6 @@ jobs:
         username: ${{secrets.MAIL_ADDRESS}}
         password: ${{secrets.MAIL_PASSWORD}}
         subject: NIC Stats ${{env.PACKAGE_VERSION}} released !
-        to: amadoubenjamain@gmail.com,assakayecelestin@gmail.com
+        to: amadoubenjamain@gmail.com,nassir.hamadou@gmail.com,assakayecelestin@gmail.com
         from: Amadou Benjamain
-        body: "Hello, a new version of NIC Stats has just been released, download and try: https://github.com/commander15/NIC-Stats/releases/latest"
+        body: "Hello, NIC Stats ${{env.PACKAGE_VERSION}} has just been released, download and try: https://github.com/commander15/NIC-Stats/releases/latest"
