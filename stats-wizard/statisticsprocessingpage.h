@@ -24,12 +24,12 @@ public:
     void cleanupPage() override;
     bool isComplete() const override;
 
-    void process(const QDate &date, const QString &outputDir, const QStringList &files, class AbstractKitManager *kitManager);
+    void process(const QDate &date, const QString &outputDir, const QStringList &files, class AbstractKitManager *kitManager, bool withStats2);
 
 private:
     static Package readPackage(const QStringList &files);
     static void writeEnveloppes(const QList<class Enveloppe> &enveloppes, const QString &dir, AbstractKitManager *kitManager);
-    static class Statistics writeStats(const Package &package, const QString &dir, AbstractKitManager *kitManager);
+    static class Statistics writeStats(const Package &package, const QString &dir, AbstractKitManager *kitManager, bool withStats2);
 
     Ui::StatisticsProcessingPage *ui;
     QTimer m_timer;

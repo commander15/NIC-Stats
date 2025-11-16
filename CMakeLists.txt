@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 project(NIC-Stats
-    VERSION 1.1
+    VERSION 1.2
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -40,6 +40,8 @@ qt_add_executable(App WIN32
     stats-wizard/statisticsprocessingpage.h stats-wizard/statisticsprocessingpage.cpp stats-wizard/statisticsprocessingpage.ui
     resources.qrc
     test.h test.cpp
+    kit/kitsmodel.h kit/kitsmodel.cpp
+    kit/kitmanagerdialog.h kit/kitmanagerdialog.cpp kit/kitmanagerdialog.ui
 )
 
 set_target_properties(App
@@ -48,6 +50,8 @@ set_target_properties(App
 )
 
 target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
+
+target_compile_definitions(App PRIVATE APP_VERSION="${PROJECT_VERSION}")
 
 # Installation
 

@@ -17,20 +17,29 @@ public:
     ~StatisticsSetupPage();
 
     QDate date() const;
+    void setDate(const QDate &date);
+    void setDateRange(const QDate &min, const QDate &max);
 
     QStringList files() const;
 
     QString outputDir() const;
     void setOutputDir(const QString &dir);
 
+    bool mustCreateSubDir() const;
+    bool generateStats2() const;
+
     bool isComplete() const override;
 
 private slots:
     void addFile();
+    void addFilesFromDir();
     void removeFile();
     void changeOutputDir();
 
 private:
+    void addSomeFiles(const QStringList &fileNames, const QString &dir = QString());
+    void removeSomeFiles(const QList<int> &indexes);
+
     Ui::StatisticsSetupPage *ui;
     QStringListModel model;
     QStringList m_files;

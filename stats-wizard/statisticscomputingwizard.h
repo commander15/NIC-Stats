@@ -18,10 +18,11 @@ class StatisticsComputingWizard : public QWizard
 
 public:
     enum Page {
-        WelcomePage = 0,
-        SetupPage = 1,
-        ProcessingPage = 2,
-        CompletedPage = 3
+        WelcomePage,
+        DispatchPage,
+        SetupPage,
+        ProcessingPage,
+        CompletedPage
     };
 
     explicit StatisticsComputingWizard(QWidget *parent = nullptr);
@@ -37,8 +38,15 @@ public slots:
 
 protected:
     void initializePage(int id) override;
+    void cleanupPage(int id) override;
+
+private slots:
+    void processButtonClick(int which);
 
 private:
+    void updateButtons(int id);
+    void openKitManager();
+
     Ui::StatisticsComputingWizard *ui;
     AbstractKitManager *m_kitManager;
 };

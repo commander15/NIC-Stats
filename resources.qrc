@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>resources/STATISTIQUES.xlsx</file>
+        <file>resources/welcome.png</file>
     </qresource>
 </RCC>

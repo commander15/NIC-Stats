@@ -6,6 +6,8 @@
 #include <QList>
 #include <QRegularExpression>
 
+class KitsModel;
+
 struct KitsQuery {
     QRegularExpression number;
     QRegularExpression name;
@@ -23,6 +25,8 @@ public:
     bool hasKitNamed(const QString &name) const;
     Kit kitNamed(const QString &name) const;
 
+    bool hasKitMatching(const QRegularExpression &expr) const;
+
     Kit officeKit() const;
     void setOfficeKit(const Kit &kit);
 
@@ -32,10 +36,20 @@ public:
     QStringList kitsNumbers() const;
 
     void addKit(const Kit &kit);
+    void insertKit(int index, const Kit &kit);
     void removeKit(const Kit &kit);
+
+    void addKits(const QList<Kit> &kits);
+    int removeKits(const QList<Kit> &kits);
+    int removeKits(const std::function<bool (const Kit &kit)> &pred);
+
+    Kit findKit(const QString &number) const;
+    Kit findKit(const QRegularExpression &expr) const;
 
     void forEachKit(const std::function<void(const Kit &kit)> &callback) const;
     void forEachKit(const std::function<void(Kit &kit)> &callback);
+
+    KitsModel *model() const;
 
 protected:
     virtual bool canAddKit(const Kit &kit) const = 0;
@@ -43,8 +57,9 @@ protected:
     virtual bool canRemoveKit(const Kit &kit) const = 0;
 
 private:
-    QRegularExpression m_officeKitExpr;
+    int m_officeKitIndex = -1;
     QList<Kit> m_kits;
+    KitsModel *m_model = nullptr;
 };
 
 #endif // ABSTRACTKITMANAGER_H

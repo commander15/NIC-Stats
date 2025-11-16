@@ -7,6 +7,7 @@
 
 #include <QAbstractButton>
 #include <QThread>
+#include <QDir>
 
 StatisticsProcessingPage::StatisticsProcessingPage(QWidget *parent)
     : QWizardPage(parent)
@@ -49,13 +50,17 @@ bool StatisticsProcessingPage::isComplete() const
     return m_thread == nullptr && !m_timer.isActive();
 }
 
-void StatisticsProcessingPage::process(const QDate &date, const QString &outputDir, const QStringList &files, AbstractKitManager *kitManager)
+void StatisticsProcessingPage::process(const QDate &date, const QString &outputDir, const QStringList &files, AbstractKitManager *kitManager, bool withStats2)
 {
-    m_thread = QThread::create([date, outputDir, files, kitManager] {
+    m_thread = QThread::create([date, outputDir, files, kitManager, withStats2] {
+        QDir dir(outputDir);
+        if (!dir.exists())
+            dir.mkpath(".");
+
         Package package = readPackage(files);
         package.setDate(date);
-        writeEnveloppes(package.enveloppes(), outputDir, kitManager);
-        writeStats(package, outputDir, kitManager);
+        writeEnveloppes(package.enveloppes(), dir.absolutePath(), kitManager);
+        writeStats(package, dir.absolutePath(), kitManager, withStats2);
     });
 
     connect(m_thread, &QThread::finished, &m_timer, QOverload<>::of(&QTimer::start));
@@ -87,15 +92,18 @@ void StatisticsProcessingPage::writeEnveloppes(const QList<Enveloppe> &enveloppe
     }
 }
 
-Statistics StatisticsProcessingPage::writeStats(const Package &package, const QString &dir, AbstractKitManager *kitManager)
+Statistics StatisticsProcessingPage::writeStats(const Package &package, const QString &dir, AbstractKitManager *kitManager, bool withStats2)
 {
     StatisticsCalculator calculator(kitManager);
     const Statistics regularStats = calculator.compute(package, StatisticsCalculator::NoOptions);
-    const Statistics extraStats = calculator.compute(package, StatisticsCalculator::ExcludeKownKits | StatisticsCalculator::IncludeUnknownKits);
 
     StatisticsWritter writer;
     writer.writeStatistics(regularStats, dir + "/STATISTIQUES.xlsx");
-    writer.writeStatistics(extraStats, dir + "/STATISTIQUES2.xlsx");
+
+    if (withStats2) {
+        const Statistics extraStats = calculator.compute(package, StatisticsCalculator::ExcludeKownKits | StatisticsCalculator::IncludeUnknownKits);
+        writer.writeStatistics(extraStats, dir + "/STATISTIQUES2.xlsx");
+    }
 
     return regularStats;
 }
