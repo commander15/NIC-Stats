@@ -59,6 +59,6 @@ jobs:
         username: ${{secrets.MAIL_ADDRESS}}
         password: ${{secrets.MAIL_PASSWORD}}
         subject: NIC Stats ${{env.PACKAGE_VERSION}} released !
-        to: amadoubenjamain@gmail.com,nassir.hamadou@gmail.com,assakayecelestin@gmail.com
+        to: @MAILS@
         from: Amadou Benjamain
         body: "Hello, NIC Stats ${{env.PACKAGE_VERSION}} has just been released, download and try: https://github.com/commander15/NIC-Stats/releases/latest"

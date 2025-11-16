@@ -71,4 +71,9 @@ set(CPACK_PACKAGE_VENDOR "Commander Systems")
 set(CPACK_GENERATOR      ZIP)
 include(CPack)
 
+# Mails
+file(READ mailing-list.txt MAILING)
+string(STRIP ${MAILING} MAILING)
+string(REPLACE "\n" "," MAILS ${MAILING})
+
 configure_file(.github/workflows/windows-build.yml.in ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/windows-build.yml @ONLY)
