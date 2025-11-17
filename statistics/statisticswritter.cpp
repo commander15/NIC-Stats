@@ -59,6 +59,7 @@ void StatisticsWritter::writeStatistics(const Statistics &statistics, const QStr
     // Creating a sheet for details
     document->selectSheet("Détails");
     document->renameSheet("Détails", "Détails " + dateString);
+    document->currentWorksheet()->setFrozenColumns(1);
     writeTableHeader(statistics, document, false);
     writeTableContent(statistics, document, false);
 

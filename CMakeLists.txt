@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 project(NIC-Stats
-    VERSION 1.2
+    VERSION 1.3
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
