@@ -78,7 +78,8 @@ jobs:
           name: NIC Stats ${{env.PACKAGE_VERSION}}
           body_path: ${{github.workspace}}/notes/RELEASE-${{env.PACKAGE_VERSION}}.md
           tag_name: v${{env.PACKAGE_VERSION}}
-          files: *.*
+          files: |
+            *.*
           make_latest: true
 
       - name: Send Mails
