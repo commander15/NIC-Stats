@@ -65,9 +65,13 @@ jobs:
       contents: write
 
     steps:
+      - name: Download Release Note
+        run: wget https://raw.githubusercontent.com/${{github.repository}}/refs/heads/main/notes/RELEASE-${{env.PACKAGE_VERSION}}.md
+
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
+          path: ${{github.workspace}}/build
           merge-multiple: true
 
       - name: Create Release
@@ -78,7 +82,7 @@ jobs:
           body_path: ${{github.workspace}}/notes/RELEASE-${{env.PACKAGE_VERSION}}.md
           tag_name: v${{env.PACKAGE_VERSION}}
           files: |
-            *.*
+            ${{github.workspace}}/build/*.*
           make_latest: true
 
       - name: Send Mails
