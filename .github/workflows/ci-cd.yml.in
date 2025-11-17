@@ -28,7 +28,6 @@ jobs:
             arch: linux_gcc_64
             packages: |
               ${{env.BUILD_DIR}}/*.tar.gz
-
     runs-on: ${{matrix.os}}
 
     steps:

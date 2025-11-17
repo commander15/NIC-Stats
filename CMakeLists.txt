@@ -84,5 +84,6 @@ string(STRIP ${MAIL_CONTENT} MAIL_CONTENT)
 string(PREPEND MAIL_CONTENT "Hello, NIC Stats ${PROJECT_VERSION} has just been released, look at the new features !\n\n")
 string(APPEND MAIL_CONTENT "\n\nDownload and try: https://github.com/commander15/NIC-Stats/releases/latest")
 string(REPLACE "\n" "\\n" MAIL_CONTENT ${MAIL_CONTENT})
+string(REPLACE "\"" "\\\"" MAIL_CONTENT ${MAIL_CONTENT})
 
 configure_file(.github/workflows/ci-cd.yml.in ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/ci-cd.yml @ONLY)
