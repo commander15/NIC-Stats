@@ -69,11 +69,20 @@ install(SCRIPT ${APP_DEPLOY_SCRIPT})
 set(CPACK_PACKAGE_NAME   "NIC-Stats")
 set(CPACK_PACKAGE_VENDOR "Commander Systems")
 set(CPACK_GENERATOR      ZIP)
+if (LINUX)
+    list(APPEND CPACK_GENERATOR TGZ)
+endif()
 include(CPack)
 
 # Mails
 file(READ mailing-list.txt MAILING)
 string(STRIP ${MAILING} MAILING)
-string(REPLACE "\n" "," MAILS ${MAILING})
+string(REPLACE "\n" "," MAIL_TO ${MAILING})
 
-configure_file(.github/workflows/windows-build.yml.in ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/windows-build.yml @ONLY)
+file(READ notes/RELEASE-${PROJECT_VERSION}.md MAIL_CONTENT)
+string(STRIP ${MAIL_CONTENT} MAIL_CONTENT)
+string(PREPEND MAIL_CONTENT "Hello, NIC Stats ${PROJECT_VERSION} has just been released, look at the new features !\n\n")
+string(APPEND MAIL_CONTENT "\n\nDownload and try: https://github.com/commander15/NIC-Stats/releases/latest")
+string(REPLACE "\n" "\\n" MAIL_CONTENT ${MAIL_CONTENT})
+
+configure_file(.github/workflows/ci-cd.yml.in ${CMAKE_CURRENT_SOURCE_DIR}/.github/workflows/ci-cd.yml @ONLY)
