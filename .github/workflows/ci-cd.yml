@@ -19,15 +19,11 @@ jobs:
             os: windows-2022
             host: windows
             arch: win64_msvc2022_64
-            packages: |
-              ${{env.BUILD_DIR}}/*.zip
 
           - platform: Linux
             os: ubuntu-latest
             host: linux
             arch: linux_gcc_64
-            packages: |
-              ${{env.BUILD_DIR}}/*.tar.gz
     runs-on: ${{matrix.os}}
 
     steps:
@@ -58,7 +54,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{matrix.platform}}-Build
-          path: ${{matrix.packages}}
+          path: |
+            ${{env.BUILD_DIR}}/*.zip
+            ${{env.BUILD_DIR}}/*.tar.gz
 
   release:
     runs-on: ubuntu-latest
