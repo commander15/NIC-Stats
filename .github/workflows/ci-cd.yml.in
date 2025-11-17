@@ -35,7 +35,7 @@ jobs:
         with:
           version: '@Qt6Core_VERSION@'
           host: ${{matrix.host}}
-          target: ${{matrix.target}}
+          target: 'desktop'
           arch: ${{matrix.arch}}
 
       - name: Setup MSVC
