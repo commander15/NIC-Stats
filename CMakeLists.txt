@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 
 project(NIC-Stats
-    VERSION 1.3
+    VERSION 1.4
 )
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -19,7 +19,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Looking for Qt 6
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets OPTIONAL_COMPONENTS Pdf)
 
 # Looking for Qxlsx
 include(cmake/FindQxlsx.cmake)
@@ -50,6 +50,9 @@ set_target_properties(App
 )
 
 target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
+if (Qt6Pdf_FOUND)
+    target_link_libraries(App PRIVATE Qt::Pdf)
+endif()
 
 target_compile_definitions(App PRIVATE APP_VERSION="${PROJECT_VERSION}")
 

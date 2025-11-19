@@ -20,6 +20,10 @@ public:
     HeaderData readHeaderData(QXlsx::Document *doc, Error *error = nullptr) const;
     Record readRecord(int row, QXlsx::Document *doc, Error *error = nullptr) const;
     QList<Record> readRecords(int count, QXlsx::Document *doc, Error *error = nullptr) const;
+
+private:
+    Enveloppe readExcelEnveloppe(const QString &fileName, Error *error = nullptr);
+    Enveloppe readPdfEnveloppe(const QString &fileName, Error *error = nullptr);
 };
 
 #endif // ENVELOPPEREADER_H

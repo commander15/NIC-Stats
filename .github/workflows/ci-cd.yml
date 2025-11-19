@@ -7,7 +7,7 @@ on:
 
 env:
   PACKAGE_NAME: NIC-Stats
-  PACKAGE_VERSION: 1.3
+  PACKAGE_VERSION: 1.4
   BUILD_DIR: ${{github.workspace}}/build
 
 jobs:
@@ -93,4 +93,4 @@ jobs:
           subject: NIC Stats ${{env.PACKAGE_VERSION}} released !
           to: amadoubenjamain@gmail.com,nassir.hamadou@gmail.com,assakayecelestin@gmail.com
           from: Amadou Benjamain
-          body: "Hello, NIC Stats 1.3 has just been released, look at the new features !\n\n# NIC Stats 1.3 Released 🎉\n\nWe are excited to announce the release of NIC Stats 1.3! This version includes a key new feature designed to significantly improve your workflow when analyzing statistical data.\n\n## What's New\n\nColumn Locking Feature in Excel\nThis new feature adds column locking to the generated Excel statistics file. This enhancement makes navigating between individual data envelopes much easier and more efficient, saving you time and effort when reviewing your data.\n\n## What next ?\n\nPlan to add pdf file handling support (using iLovePDF API) and multi dispatch generation.\n\nMade with ♥️ by Amadou Benjamain.\n\nDownload and try: https://github.com/commander15/NIC-Stats/releases/latest"
+          body: "Hello, NIC Stats 1.4 has just been released, look at the new features !\n\n# NIC Stats 1.4 Released 🚀\n\n## 📕 **PDF support is here!**  \nNow drop PDFs directly — no more ilovepdf suffering  \n\n**Experimental** — test it, break it, tell me  \n\n*Also: faster processing + prettier Excel output*\n\nNext → rock-solid PDFs + CLI mode  \n\nMade with coffee ☕, anime 🧝 & zero tolerance for manual work ❌ \nby Amadou Wanie Benjamin\n\n💣 Go destroy those PDFs!\n\nDownload and try: https://github.com/commander15/NIC-Stats/releases/latest"
