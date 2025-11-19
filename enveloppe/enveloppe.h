@@ -28,7 +28,7 @@ public:
 
     QStringList recordsKitsNumbers() const;
     QList<Record> records() const;
-    void addRecord(const Record &record, const QString &kit);
+    void addRecord(const Record &record);
 
 private:
     QSharedDataPointer<EnvelopData> data;

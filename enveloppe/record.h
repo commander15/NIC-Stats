@@ -37,6 +37,7 @@ public:
 
     // fullName
     QString fullName(const QString &sep = " ") const;
+    void setFullName(const QString &name, const QString &sep = QString());
 
     // sex
     QString sex() const;
