@@ -1,5 +1,7 @@
 #include "record.h"
 
+#include <QStringList>
+
 class RecordData : public QSharedData
 {
 public:
@@ -67,6 +69,37 @@ QString Record::fullName(const QString &sep) const
         return data->name;
     else
         return data->name + sep + data->firstName;
+}
+
+void Record::setFullName(const QString &name, const QString &sep)
+{
+    if (sep.isEmpty()) {
+        data->name = name;
+        data->firstName.clear();
+        return;
+    }
+
+    QStringList fullName = name.split(sep, Qt::SkipEmptyParts);
+    if (fullName.isEmpty()) {
+        data->name.clear();
+        data->firstName.clear();
+    }
+
+    switch (fullName.size()) {
+    case 0:
+        data->name.clear();
+        data->firstName.clear();
+        break;
+
+    case 1:
+        data->name = fullName.first();
+        break;
+
+    default:
+        data->firstName = fullName.takeLast();
+        data->name = fullName.join(' ');
+        break;
+    }
 }
 
 QString Record::sex() const

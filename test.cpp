@@ -18,7 +18,13 @@ Package readPackage(const QString &dir)
     QDir directory(dir);
     directory.refresh();
 
-    const QStringList files = directory.entryList({ "*.xlsx" }, QDir::Files, QDir::Name);
+#ifdef QT_PDF_LIB
+    const QStringList filters = { "*.xlsx", "*.pdf" };
+#else
+    const QStringList filters = { "*.xlsx" };
+#endif
+
+    const QStringList files = directory.entryList(filters, QDir::Files, QDir::Name);
     for (const QString &file : files) {
         const Enveloppe enveloppe = reader.readEnveloppe(directory.filePath(file), &readerError);
         if (readerError.code() == 0)

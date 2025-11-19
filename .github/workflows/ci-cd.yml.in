@@ -18,7 +18,9 @@ jobs:
           - platform: Windows
             os: windows-2022
             host: windows
-            arch: win64_msvc2022_64
+            arch: win64_msvc2019_64
+            packages: |
+              ${{env.BUILD_DIR}}/*.zip
 
           - platform: Linux
             os: ubuntu-latest
@@ -33,10 +35,11 @@ jobs:
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: '@Qt6Core_VERSION@'
+          version: '6.7.3'
           host: ${{matrix.host}}
           target: 'desktop'
           arch: ${{matrix.arch}}
+          modules: 'qtpdf'
 
       - name: Setup MSVC
         if: matrix.host == 'windows'

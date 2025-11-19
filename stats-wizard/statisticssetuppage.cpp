@@ -4,6 +4,7 @@
 #include <QMenu>
 #include <QStandardPaths>
 #include <QFileDialog>
+#include <QMessageBox>
 
 StatisticsSetupPage::StatisticsSetupPage(QWidget *parent)
     : QWizardPage(parent)
@@ -112,7 +113,12 @@ void StatisticsSetupPage::addFilesFromDir()
     QDir dir(path);
     dir.refresh();
 
-    const QStringList files = dir.entryList({ "*.xlsx" }, QDir::Files, QDir::Name);
+    QStringList filters = { "*.xlsx" };
+#ifdef QT_PDF_LIB
+    filters.append("*.pdf");
+#endif
+
+    const QStringList files = dir.entryList(filters, QDir::Files, QDir::Name);
     addSomeFiles(files, dir.absolutePath());
 }
 
@@ -137,6 +143,16 @@ void StatisticsSetupPage::changeOutputDir()
 
 void StatisticsSetupPage::addSomeFiles(const QStringList &fileNames, const QString &dir)
 {
+#ifdef QT_PDF_LIB
+    // Warn about experimental PDF features if a pdf file is included
+    auto it = std::find_if(fileNames.begin(), fileNames.end(), [](const QString &fileName) {
+        return fileName.endsWith(".pdf");
+    });
+
+    if (it != fileNames.end())
+        QMessageBox::warning(this, tr("Experiment notice"), tr("PDF support is still experimental, use with caution !"));
+#endif
+
     if (dir.isEmpty()) {
         m_files.append(fileNames);
     } else {

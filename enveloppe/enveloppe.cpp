@@ -107,7 +107,8 @@ QList<Record> Enveloppe::records() const
     return data->records.values();
 }
 
-void Enveloppe::addRecord(const Record &record, const QString &kit)
+void Enveloppe::addRecord(const Record &record)
 {
+    const QString kit = record.enrollmentNumber().section('-', 0, 0);
     data->records.insert(kit, record);
 }
