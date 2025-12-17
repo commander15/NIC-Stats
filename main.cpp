@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     app.setApplicationDisplayName("NIC Stats");
     app.setStyle("fusion");
 
-    if (QDate::currentDate() > QDate(2025, 12, 1)) {
+    if (QDate::currentDate() > QDate(2025, 12, 31)) {
         showExpiryNotice();
         return 0;
     }
