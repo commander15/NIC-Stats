@@ -4,6 +4,8 @@ project(NIC-Stats
     VERSION 1.4
 )
 
+option(NIC_STATS_BUILD_FINDER "Build finder tool" OFF)
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Enabling C++ 20 support
@@ -24,49 +26,19 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets OPTIONAL_COMPONENTS Pdf)
 # Looking for Qxlsx
 include(cmake/FindQxlsx.cmake)
 
-qt_add_executable(App WIN32
-    main.cpp
-    common/error.cpp common/error.h common/reader.cpp common/reader.h common/writer.cpp common/writer.h
-    enveloppe/enveloppe.cpp enveloppe/enveloppe.h enveloppe/enveloppereader.cpp enveloppe/enveloppereader.h enveloppe/record.cpp enveloppe/record.h
-    enveloppe/enveloppewriter.h enveloppe/enveloppewriter.cpp
-    package/package.h package/package.cpp
-    statistics/statisticscalculator.h statistics/statisticscalculator.cpp
-    kit/abstractkitmanager.h kit/abstractkitmanager.cpp
-    kit/kit.cpp kit/kit.h
-    kit/kitmanager.h kit/kitmanager.cpp
-    stats-wizard/statisticscomputingwizard.cpp stats-wizard/statisticscomputingwizard.h stats-wizard/statisticscomputingwizard.ui
-    statistics/statisticswritter.cpp statistics/statisticswritter.h
-    stats-wizard/statisticssetuppage.h stats-wizard/statisticssetuppage.cpp stats-wizard/statisticssetuppage.ui
-    stats-wizard/statisticsprocessingpage.h stats-wizard/statisticsprocessingpage.cpp stats-wizard/statisticsprocessingpage.ui
-    resources.qrc
-    test.h test.cpp
-    kit/kitsmodel.h kit/kitsmodel.cpp
-    kit/kitmanagerdialog.h kit/kitmanagerdialog.cpp kit/kitmanagerdialog.ui
-)
+# Add library
+add_subdirectory(src)
 
-set_target_properties(App
-    PROPERTIES
-        OUTPUT_NAME NIC-Stats
-)
+# Add finder
+if (NIC_STATS_BUILD_FINDER)
+    # Looking for Widgetry
+    include(cmake/FindWidgetry.cmake)
 
-target_link_libraries(App PRIVATE Qt::Widgets QXlsx)
-if (Qt6Pdf_FOUND)
-    target_link_libraries(App PRIVATE Qt::Pdf)
+    add_subdirectory(finder)
 endif()
 
-target_compile_definitions(App PRIVATE APP_VERSION="${PROJECT_VERSION}")
-
-# Installation
-
-install(TARGETS App RUNTIME DESTINATION bin)
-
-qt_generate_deploy_app_script(
-    TARGET App
-    OUTPUT_SCRIPT APP_DEPLOY_SCRIPT
-    NO_TRANSLATIONS
-)
-
-install(SCRIPT ${APP_DEPLOY_SCRIPT})
+# Add app
+add_subdirectory(app)
 
 # Package
 set(CPACK_PACKAGE_NAME   "NIC-Stats")
